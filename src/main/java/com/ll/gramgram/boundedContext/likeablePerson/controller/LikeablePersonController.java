@@ -10,6 +10,7 @@ import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -122,9 +123,32 @@ public class LikeablePersonController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/toList")
-    @ResponseBody
-    public String showToList(Model model) {
-        //TODO : showToList 구현해야 함
-        return "usr/likeablePerson/toList 구현해야 함";
+    public String showToList(
+            @RequestParam(defaultValue = "createDate") String standard,
+            @RequestParam(defaultValue = "true") boolean order,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "") String terms,
+            Model model
+    ) {
+        InstaMember instaMember = rq.getMember().getInstaMember();
+
+        if (instaMember != null) {
+            String username = instaMember.getUsername();
+            Page<LikeablePerson> paging = likeablePersonService.findByInstaUsername(username, page, standard, order);
+
+            if (terms.equals("gender")) {
+                List<LikeablePerson> likeablePeople = likeablePersonService.genderFileter(paging);
+                model.addAttribute("likeablePeople", likeablePeople);
+            }else
+                model.addAttribute("likeablePeople", paging);
+        }
+
+
+        model.addAttribute("standard", standard);
+        model.addAttribute("terms", terms);
+        model.addAttribute("order", order);
+        model.addAttribute("page", page);
+
+        return "usr/likeablePerson/toList";
     }
 }

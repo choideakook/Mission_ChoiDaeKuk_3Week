@@ -39,20 +39,28 @@ public class NotProd {
                 Member memberUser8ByNaver = memberService.whenSocialLogin("NAVER", "NAVER__9xIgV-SJgWqRYtj3IX5zCOzvdQdTY2okeb9iXO2Zip4").getData();
                 Member memberUser9ByFacebook = memberService.whenSocialLogin("FACEBOOK", "FACEBOOK__6267420483336855").getData();
 
+                instaMemberService.connect(memberUser1, "insta_user1", "M");
                 instaMemberService.connect(memberUser2, "insta_user2", "M");
                 instaMemberService.connect(memberUser3, "insta_user3", "W");
                 instaMemberService.connect(memberUser4, "insta_user4", "M");
                 instaMemberService.connect(memberUser5, "insta_user5", "W");
 
+
                 // 원활한 테스트와 개발을 위해서 자동으로 만들어지는 호감이 삭제, 수정이 가능하도록 쿨타임해제
-                LikeablePerson likeablePersonToinstaUser4 = likeablePersonService.like(memberUser3, "insta_user4", 1).getData();
+                makeLikes(memberUser3, "insta_user4", 1, likeablePersonService);
+                makeLikes(memberUser3, "insta_user100", 1, likeablePersonService);
 
-                Ut.reflection.setFieldValue(likeablePersonToinstaUser4, "modifyUnlockDate", LocalDateTime.now().minusSeconds(1));
-
-                LikeablePerson likeablePersonToinstaUser100 = likeablePersonService.like(memberUser3, "insta_user100", 2).getData();
-
-                Ut.reflection.setFieldValue(likeablePersonToinstaUser100, "modifyUnlockDate", LocalDateTime.now().minusSeconds(1));
+                // 3번을 좋아하는 user 생성
+                makeLikes(memberUser1, "insta_user3", 1, likeablePersonService);
+                makeLikes(memberUser2, "insta_user3", 2, likeablePersonService);
+                makeLikes(memberUser4, "insta_user3", 3, likeablePersonService);
+                makeLikes(memberUser5, "insta_user3", 1, likeablePersonService);
             }
         };
+    }
+
+    private static void makeLikes(Member fromLike, String toLike, int attractive, LikeablePersonService likeablePersonService) {
+        LikeablePerson createLike = likeablePersonService.like(fromLike, toLike, attractive).getData();
+        Ut.reflection.setFieldValue(createLike, "modifyUnlockDate", LocalDateTime.now().minusSeconds(1));
     }
 }

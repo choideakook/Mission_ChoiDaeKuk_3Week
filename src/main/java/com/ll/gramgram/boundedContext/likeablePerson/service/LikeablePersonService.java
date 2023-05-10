@@ -12,9 +12,12 @@ import com.ll.gramgram.boundedContext.likeablePerson.repository.LikeablePersonRe
 import com.ll.gramgram.boundedContext.member.entity.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.*;
+import org.springframework.data.util.Streamable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -67,6 +70,16 @@ public class LikeablePersonService {
 
     public Optional<LikeablePerson> findById(Long id) {
         return likeablePersonRepository.findById(id);
+    }
+
+    public Page<LikeablePerson> findByInstaUsername(String toInstaMemberUsername, int page, String standard, boolean order) {
+        List<Sort.Order> sorts = new ArrayList<>();
+
+        if (order) sorts.add(Sort.Order.desc(standard));
+        else sorts.add(Sort.Order.asc(standard));
+
+        Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
+        return this.likeablePersonRepository.findByToInstaMemberUsername(toInstaMemberUsername, pageable);
     }
 
     @Transactional
@@ -211,5 +224,18 @@ public class LikeablePersonService {
 
 
         return RsData.of("S-1", "호감표시취소가 가능합니다.");
+    }
+
+    public List<LikeablePerson> genderFileter(Page<LikeablePerson> paging) {
+        List<LikeablePerson> list = new ArrayList<>();
+        for (LikeablePerson likeablePerson : paging) {
+            String gender = likeablePerson.getFromInstaMember().getGender();
+
+            if (gender.equals("W"))
+                list.add(0, likeablePerson);
+            else
+                list.add(likeablePerson);
+        }
+        return list;
     }
 }

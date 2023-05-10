@@ -1,0 +1,114 @@
+<html layout:decorate="~{usr/layout/layout.html}">
+
+<head>
+    <title>당신을 좋아하는 사람들</title>
+</head>
+
+<body>
+
+<main layout:fragment="main" class="flex-grow flex items-center justify-center">
+    <div class="max-w-2xl w-full px-4">
+        <div th:unless="${@rq.member.hasConnectedInstaMember}" th:include="usr/part/needToConnect::base"></div>
+
+        <th:block th:if="${@rq.member.hasConnectedInstaMember}">
+            <div th:unless="${!#lists.isEmpty(likeablePeople)}" class="text-center">
+                <div><i class="fa-regular fa-face-laugh"></i> 목록이 비어있습니다. 당신의 호감을 표시해주세요.</div>
+            </div>
+
+            <h1 class="mb-4 mt-5 flex justify-between" th:if="${!#lists.isEmpty(likeablePeople)}">
+                <div>
+                    <i class="fa-solid fa-list-ol"></i>
+                    내가받은 호감
+                </div>
+
+                <select class="select w-fit select-xs max-w-xs" onchange="location.href=this.value;">
+                    <option th:selected="${order} eq true"
+                            th:value="@{/usr/likeablePerson/toList(page=${page}, order='true')}">
+                        최신 순
+                    </option>
+                    <option th:selected="${order} eq false"
+                            th:value="@{/usr/likeablePerson/toList(page=${page}, order='false')}">
+                        오래된 순
+                    </option>
+                    <option th:selected="${standard} eq 'attractiveTypeCode'"
+                            th:value="@{/usr/likeablePerson/toList(page=${page}, order='true', standard='attractiveTypeCode')}">
+                        사유로 정렬
+                    </option>
+                    <option th:selected="${terms} eq 'gender'"
+                            th:value="@{/usr/likeablePerson/toList(page=${page}, order='false', terms='gender', order='true')}">
+                        성별로 정렬
+                    </option>
+                </select>
+            </h1>
+
+            <ul th:if="${!#lists.isEmpty(likeablePeople)}" class="flex flex-col gap-4">
+                <li th:each="likeablePerson: ${likeablePeople}">
+                    <div class="card bg-base-100 shadow-xl">
+                        <div class="card-body">
+                            <h2 class="card-title">
+                                <span><i class="fa-brands fa-instagram"></i></span>
+                                <span th:data-test="|fromInstaMember_username=${likeablePerson.fromInstaMember.username}|"
+                                      th:text="${likeablePerson.fromInstaMember.username}"></span>
+                            </h2>
+                            <a th:href="|https://instagram.com/${likeablePerson.fromInstaMember.username}|"
+                               target="_blank" class="block text-sm break-all text-blue-400 underline">
+                                <span>https://instagram.com/</span><span class="text-red-400"
+                                                                         th:text="${likeablePerson.fromInstaMember.username}"></span>
+                            </a>
+
+                            <div class="mt-4 mb-2 flex flex-col gap-2">
+                                <div>
+                                    <i class="fa-regular fa-clock"></i>
+                                    호감표시
+                                </div>
+                                <div class="mt-2">
+                                    <span class="badge badge-primary"
+                                          th:text="${#temporals.format(likeablePerson.createDate, 'yy.MM.dd HH:mm')}"></span>
+                                </div>
+                            </div>
+
+                            <div class="mt-4 mb-2 flex flex-col gap-2">
+                                <div>
+                                    <i class="fa-solid fa-check"></i>
+                                    호감사유
+                                </div>
+                                <div class="badge badge-primary"
+                                     th:data-test="|fromInstaMember_attractiveTypeDisplayName=${likeablePerson.attractiveTypeDisplayName}|"
+                                     th:utext="${likeablePerson.attractiveTypeDisplayNameWithIcon}"></div>
+                            </div>
+
+                            <div class="mt-4 mb-2 flex flex-col gap-2">
+                                <div>
+                                    <i class="fa-regular fa-face-laugh-beam"></i>
+                                    호감을 표시한 사람
+                                </div>
+                                <svg th:data-jdenticon-value="|${likeablePerson.jdenticon}|" width="120"
+                                     height="120"></svg>
+                            </div>
+
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </th:block>
+
+        <div class="text-center mt-4">
+            <a th:if="${@rq.member.hasConnectedInstaMember}" href="list" class="btn btn-link">
+                <span>
+                    <i class="fa-solid fa-list-ol mr-1"></i>
+                    호감목록&nbsp;
+                </span>
+            </a>
+            <a th:if="${@rq.member.hasConnectedInstaMember}" href="/usr/member/me" class="btn btn-link">
+                <span>
+                    <i class="fa-solid fa-user mr-1"></i>
+                    내 정보&nbsp;
+                </span>
+            </a>
+        </div>
+    </div>
+</main>
+</body>
+
+</html>
+
