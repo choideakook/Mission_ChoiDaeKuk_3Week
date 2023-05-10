@@ -5,6 +5,7 @@ import com.ll.gramgram.base.rsData.RsData;
 import com.ll.gramgram.boundedContext.instaMember.entity.InstaMember;
 import com.ll.gramgram.boundedContext.likeablePerson.entity.LikeablePerson;
 import com.ll.gramgram.boundedContext.likeablePerson.service.LikeablePersonService;
+import com.ll.gramgram.boundedContext.member.entity.Member;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
@@ -122,9 +123,14 @@ public class LikeablePersonController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/toList")
-    @ResponseBody
     public String showToList(Model model) {
-        //TODO : showToList 구현해야 함
-        return "usr/likeablePerson/toList 구현해야 함";
+        InstaMember instaMember = rq.getMember().getInstaMember();
+
+        if (instaMember != null) {
+            List<LikeablePerson> likeablePeople = instaMember.getToLikeablePeople();
+            model.addAttribute("likeablePeople", likeablePeople);
+        }
+
+        return "usr/likeablePerson/toList";
     }
 }
