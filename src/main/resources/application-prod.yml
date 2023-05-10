@@ -21,3 +21,7 @@ logging:
     com.ll.gramgram: INFO
     org.hibernate.orm.jdbc.bind: INFO
     org.hibernate.orm.jdbc.extract: INFO
+
+custom:
+  site:
+    baseUrl: https://1ll.ca/login/oauth2/code/kakao

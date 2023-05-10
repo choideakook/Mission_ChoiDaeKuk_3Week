@@ -24,33 +24,33 @@ spring:
             scope: profile,email
           kakao:
             clientId: ENC(dRclaM2ik9VF20c1jdsWOBWRT25p7FLFvZXxKOAv82eE3YQvgUJEe1L2mL+Db98a)
-            scope:
             client-name: Kakao
             authorization-grant-type: authorization_code
-            redirect-uri: https://localhost/login/oauth2/code/kakao
             client-authentication-method: POST
+            scope:
+            redirect-uri: ${custom.site.baseUrl}
           naver:
             client-id: ENC(G8ujNaPA6ZrZsSXUw1NnHG/XwOso3B2CK0aDkhHE9Qo=)
             client-secret: ENC(ogB8hqEye1ji4KJVJz4h20DSHpq14F2T)
-            redirect-uri: https://localhost/login/oauth2/code/naver
             authorization-grant-type: authorization_code
-            scope: name
             client-name: Naver
+            scope: name
+            redirect-uri: ${custom.site.baseUrl}
           facebook:
             clientId: ENC(l2mvc6SSOwpUjkrLzVLEPwbJifzasj8IiBnDMwmyWIY=)
             client-secret: ENC(A7iSxBQJkqzSOZJsA2A8IfwKO037xMoM682G3mGWMchtZA5GMsKbqDnshFeS2ORv)
-            redirect-uri: https://localhost/login/oauth2/code/faceboo
             client-name: Facebook
             scope:
+            redirect-uri: ${custom.site.baseUrl}
           instagram:
-            provider: instagram
             clientId: ENC(wYWC58WDQr6kzRZYnu0VkN195AsiOAOl)
             client-secret: ENC(agduIiC4TyyMI01Y90PabEb03pcb9S1GFob4UeJpzwHT++dyINuDeTqJSaQnxdkU)
-            scope: user_profile,user_media
+            provider: instagram
             client-name: Instagram
             authorization-grant-type: authorization_code
-            redirect-uri: https://localhost/login/oauth2/code/instagram
             client-authentication-method: client_secret_post
+            scope: user_profile,user_media
+            redirect-uri: ${custom.site.baseUrl}
 
         provider:
           kakao:
@@ -90,6 +90,8 @@ custom:
     modifyCoolTime: '#{60 * 60 * 3}'
     from:
       max: 10
+  site:
+    baseUrl: http://localhost:8080/login/oauth2/code/kakao
 
 jasypt:
   encryptor:
