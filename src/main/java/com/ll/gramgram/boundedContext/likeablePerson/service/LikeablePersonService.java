@@ -12,9 +12,14 @@ import com.ll.gramgram.boundedContext.likeablePerson.repository.LikeablePersonRe
 import com.ll.gramgram.boundedContext.member.entity.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -67,6 +72,16 @@ public class LikeablePersonService {
 
     public Optional<LikeablePerson> findById(Long id) {
         return likeablePersonRepository.findById(id);
+    }
+
+    public Page<LikeablePerson> findByInstaUsername(String toInstaMemberUsername, int page, String standard, boolean order) {
+        List<Sort.Order> sorts = new ArrayList<>();
+
+        if (order) sorts.add(Sort.Order.desc(standard));
+        else sorts.add(Sort.Order.asc(standard));
+
+        Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
+        return this.likeablePersonRepository.findByToInstaMemberUsername(toInstaMemberUsername, pageable);
     }
 
     @Transactional

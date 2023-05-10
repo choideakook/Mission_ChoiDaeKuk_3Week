@@ -21,12 +21,15 @@
                     내가받은 호감
                 </div>
 
-                <select class="select w-fit select-xs max-w-xs">
-                    <option>최신 순</option>
-                    <option>오래된 순</option>
-                    <option>호감이 많은 순</option>
-                    <option>성별 별 정렬</option>
-                    <option>사유 별 정렬</option>
+                <select class="select w-fit select-xs max-w-xs" onchange="location.href=this.value;">
+                    <option th:selected="${order} eq true"
+                            th:value="@{/usr/likeablePerson/toList(page=${page}, order='true')}">
+                        최신 순
+                    </option>
+                    <option th:selected="${order} eq false"
+                            th:value="@{/usr/likeablePerson/toList(page=${page}, order='false')}">
+                        오래된 순
+                    </option>
                 </select>
             </h1>
 

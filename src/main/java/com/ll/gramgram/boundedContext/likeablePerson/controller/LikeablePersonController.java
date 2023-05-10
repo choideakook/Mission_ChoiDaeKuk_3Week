@@ -11,6 +11,7 @@ import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -123,13 +124,26 @@ public class LikeablePersonController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/toList")
-    public String showToList(Model model) {
+    public String showToList(
+            @RequestParam (defaultValue = "createDate") String standard,
+            @RequestParam (defaultValue = "true") boolean order,
+            @RequestParam (defaultValue = "0") int page,
+            Model model
+    ) {
         InstaMember instaMember = rq.getMember().getInstaMember();
 
-        if (instaMember != null) {
-            List<LikeablePerson> likeablePeople = instaMember.getToLikeablePeople();
-            model.addAttribute("likeablePeople", likeablePeople);
-        }
+        if (instaMember == null)
+            return "usr/likeablePerson/toList";
+
+        String username = instaMember.getUsername();
+        Page<LikeablePerson> likeablePeople = likeablePersonService.findByInstaUsername(username, page, standard, order);
+
+
+
+        model.addAttribute("likeablePeople", likeablePeople);
+        model.addAttribute("standard", standard);
+        model.addAttribute("order", order);
+        model.addAttribute("page", page);
 
         return "usr/likeablePerson/toList";
     }

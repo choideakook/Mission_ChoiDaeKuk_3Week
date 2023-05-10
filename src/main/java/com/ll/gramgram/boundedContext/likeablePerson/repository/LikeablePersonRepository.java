@@ -1,6 +1,8 @@
 package com.ll.gramgram.boundedContext.likeablePerson.repository;
 
 import com.ll.gramgram.boundedContext.likeablePerson.entity.LikeablePerson;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -15,5 +17,5 @@ public interface LikeablePersonRepository extends JpaRepository<LikeablePerson, 
 
     Optional<LikeablePerson> findByFromInstaMember_usernameAndToInstaMember_username(String fromInstaMemberUsername, String toInstaMemberUsername);
 
-
+    Page<LikeablePerson> findByToInstaMemberUsername(String toInstaMemberUsername, Pageable pageable);
 }
