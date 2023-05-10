@@ -15,9 +15,19 @@
                 <div><i class="fa-regular fa-face-laugh"></i> 목록이 비어있습니다. 당신의 호감을 표시해주세요.</div>
             </div>
 
-            <h1 class="mb-4" th:if="${!#lists.isEmpty(likeablePeople)}">
-                <i class="fa-solid fa-list-ol"></i>
-                내가받은 호감
+            <h1 class="mb-4 mt-5 flex justify-between" th:if="${!#lists.isEmpty(likeablePeople)}">
+                <div>
+                    <i class="fa-solid fa-list-ol"></i>
+                    내가받은 호감
+                </div>
+
+                <select class="select w-fit select-xs max-w-xs">
+                    <option>최신 순</option>
+                    <option>오래된 순</option>
+                    <option>호감이 많은 순</option>
+                    <option>성별 별 정렬</option>
+                    <option>사유 별 정렬</option>
+                </select>
             </h1>
 
             <ul th:if="${!#lists.isEmpty(likeablePeople)}" class="flex flex-col gap-4">
