@@ -12,10 +12,8 @@ import com.ll.gramgram.boundedContext.likeablePerson.repository.LikeablePersonRe
 import com.ll.gramgram.boundedContext.member.entity.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
+import org.springframework.data.util.Streamable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -226,5 +224,18 @@ public class LikeablePersonService {
 
 
         return RsData.of("S-1", "호감표시취소가 가능합니다.");
+    }
+
+    public List<LikeablePerson> genderFileter(Page<LikeablePerson> paging) {
+        List<LikeablePerson> list = new ArrayList<>();
+        for (LikeablePerson likeablePerson : paging) {
+            String gender = likeablePerson.getFromInstaMember().getGender();
+
+            if (gender.equals("W"))
+                list.add(0, likeablePerson);
+            else
+                list.add(likeablePerson);
+        }
+        return list;
     }
 }

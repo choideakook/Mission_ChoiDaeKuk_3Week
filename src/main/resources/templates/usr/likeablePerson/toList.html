@@ -30,6 +30,14 @@
                             th:value="@{/usr/likeablePerson/toList(page=${page}, order='false')}">
                         오래된 순
                     </option>
+                    <option th:selected="${standard} eq 'attractiveTypeCode'"
+                            th:value="@{/usr/likeablePerson/toList(page=${page}, order='true', standard='attractiveTypeCode')}">
+                        사유로 정렬
+                    </option>
+                    <option th:selected="${terms} eq 'gender'"
+                            th:value="@{/usr/likeablePerson/toList(page=${page}, order='false', terms='gender', order='true')}">
+                        성별로 정렬
+                    </option>
                 </select>
             </h1>
 

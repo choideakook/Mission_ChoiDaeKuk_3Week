@@ -5,7 +5,6 @@ import com.ll.gramgram.base.rsData.RsData;
 import com.ll.gramgram.boundedContext.instaMember.entity.InstaMember;
 import com.ll.gramgram.boundedContext.likeablePerson.entity.LikeablePerson;
 import com.ll.gramgram.boundedContext.likeablePerson.service.LikeablePersonService;
-import com.ll.gramgram.boundedContext.member.entity.Member;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
@@ -125,23 +124,28 @@ public class LikeablePersonController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/toList")
     public String showToList(
-            @RequestParam (defaultValue = "createDate") String standard,
-            @RequestParam (defaultValue = "true") boolean order,
-            @RequestParam (defaultValue = "0") int page,
+            @RequestParam(defaultValue = "createDate") String standard,
+            @RequestParam(defaultValue = "true") boolean order,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "") String terms,
             Model model
     ) {
         InstaMember instaMember = rq.getMember().getInstaMember();
 
-        if (instaMember == null)
-            return "usr/likeablePerson/toList";
+        if (instaMember != null) {
+            String username = instaMember.getUsername();
+            Page<LikeablePerson> paging = likeablePersonService.findByInstaUsername(username, page, standard, order);
 
-        String username = instaMember.getUsername();
-        Page<LikeablePerson> likeablePeople = likeablePersonService.findByInstaUsername(username, page, standard, order);
+            if (terms.equals("gender")) {
+                List<LikeablePerson> likeablePeople = likeablePersonService.genderFileter(paging);
+                model.addAttribute("likeablePeople", likeablePeople);
+            }else
+                model.addAttribute("likeablePeople", paging);
+        }
 
 
-
-        model.addAttribute("likeablePeople", likeablePeople);
         model.addAttribute("standard", standard);
+        model.addAttribute("terms", terms);
         model.addAttribute("order", order);
         model.addAttribute("page", page);
 
